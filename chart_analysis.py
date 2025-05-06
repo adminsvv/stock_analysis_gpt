@@ -37,7 +37,7 @@ def login_block():
     if submit:
         if user in CREDENTIALS and pwd == CREDENTIALS[user]:
             st.session_state["authenticated"] = True
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("❌ Incorrect username or password")
     return False
