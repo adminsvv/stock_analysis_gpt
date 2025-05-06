@@ -4,6 +4,8 @@ import yfinance as yf
 import streamlit as st
 from datetime import datetime, timedelta,date,time as dt_time
 import pandas as pd
+import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 
 st.set_page_config(
     layout="wide",  # 👈 enables wide mode
@@ -65,8 +67,47 @@ if submit:
     # all_data_today1['Date'] = all_data_today1['Date'].astype(str)
     all_data_today1['Date'] = pd.to_datetime(all_data_today1['Date'])
     all_data_today1=all_data_today1[all_data_today1['Date']<=(datetime.today() - timedelta(days=1))]
+    st.write(all_data_today1.tail())
+
+    all_data_today1['Date'] = pd.to_datetime(all_data_today1['Date'])
+    all_data_today1['Date'] = all_data_today1['Date'].dt.strftime('%Y-%m-%d')  # remove time component for display
+    
+    # Create subplots
+    fig = make_subplots(
+        rows=2, cols=1, shared_xaxes=True,
+        row_heights=[0.7, 0.3], vertical_spacing=0.05,
+        specs=[[{"type": "scatter"}], [{"type": "bar"}]]
+    )
+    
+    # Close Price Line Chart
+    fig.add_trace(go.Scatter(
+        x=df['Date'], y=df['Close'],
+        mode='lines', name='Close Price',
+        line=dict(color='blue')
+    ), row=1, col=1)
+    
+    # Volume Bar Chart
+    fig.add_trace(go.Bar(
+        x=all_data_today1['Date'], y=all_data_today1['Volume'],
+        name='Volume',
+        marker_color='gray'
+    ), row=2, col=1)
+    
+    # Update layout to treat Date as category (removes gaps)
+    fig.update_layout(
+        title="Stock Close Price and Volume",
+        height=600,
+        showlegend=False,
+        xaxis=dict(type='category'),
+        xaxis2=dict(type='category'),
+        yaxis1_title="Close Price",
+        yaxis2_title="Volume",
+        xaxis2_title="Date"
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
     all_data_today1['Date'] = all_data_today1['Date'].astype(str)
-    st.write(all_data_today1.head())
+    
     # st.dataframe(all_data_today1)
     # text_data = all_data_today1.to_string(index=False)
     if not all_data_today1.empty:
