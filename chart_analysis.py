@@ -90,7 +90,7 @@ if submit:
     fig.add_trace(go.Bar(
         x=all_data_today1['Date'], y=all_data_today1['Volume'],
         name='Volume',
-        marker_color='gray'
+        marker_color='green'
     ), row=2, col=1)
     
     # Update layout to treat Date as category (removes gaps)
