@@ -11,9 +11,7 @@ st.set_page_config(
     page_icon="📈"
 )
 
-with open('D:/Chat Gpt/chatgpt_api.txt', 'r') as file:
-    api_key = file.read()
-# openai.api_key=api_key
+api_key = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 
 CREDENTIALS = {
