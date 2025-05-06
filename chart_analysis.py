@@ -81,7 +81,7 @@ if submit:
     
     # Close Price Line Chart
     fig.add_trace(go.Scatter(
-        x=df['Date'], y=df['Close'],
+        x=all_data_today1['Date'], y=all_data_today1['Close'],
         mode='lines', name='Close Price',
         line=dict(color='blue')
     ), row=1, col=1)
