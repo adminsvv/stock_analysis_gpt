@@ -118,8 +118,10 @@ json_schema = {
                             "final_verdict": {
                                 "type": "object",
                                 "properties": {
-                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell"], "description": "If quite bad technically suggest a Sell else Hold."},
-                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"], "description": "If stock is technically coming out good suggest Buy."}
+                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell"], "description": "Use 'Sell' if the stock is clearly weak technically (e.g., downtrend, breakdown). Use 'Hold' if there is no strong reason to exit. Use 'Buy' only if strong technical improvement and already holding."},
+                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"], "description": "Use 'Buy' if technicals show clear breakout, reversal, or strong base. Use 'Wait' if setup is unclear, risky, or still developing."
+  }
+}}
                                 },
                                 "required": ["if_holding", "if_not_holding"],
                                 "additionalProperties": False
