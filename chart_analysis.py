@@ -8,6 +8,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from pymongo import MongoClient
 import requests
+import json
 
 st.set_page_config(
     layout="wide",  # 👈 enables wide mode
