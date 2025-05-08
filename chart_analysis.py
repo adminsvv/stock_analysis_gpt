@@ -333,6 +333,17 @@ if submit:
         output_text=response.output_text.strip().replace("```json", "").replace("```", "").strip()
         data = json.loads(output_text)
 
+        data["section_6_fact_metrics"] = {
+            "current_price": {"value": current_price},
+            "week_52_high": {"value": week_52_high},
+            "week_52_low": {"value": week_52_low},
+            "dma_9": {"value": dma_9},
+            "dma_20": {"value": dma_20},
+            "dma_50": {"value": dma_50},
+            "dma_100": {"value": dma_100}
+        }
+        
+
         def render_section_title(title):
             return f"<h2 style='color:#2e6f9e;border-bottom:2px solid #ccc;padding-bottom:4px;margin-top:20px'>{title}</h2>"
         
@@ -396,6 +407,16 @@ if submit:
         # Section 5
         html += render_section_title("5. Price-Volume Action")
         html += render_list(data["section_5_price_volume_action"])
+
+        html += render_section_title("6. Fact Metrics")
+
+        fact_rows = []
+        for k, v in data["section_6_fact_metrics"].items():
+            label = k.replace("_", " ").title()
+            value = v.get("value", "N/A")
+            fact_rows.append({"Metric": label, "Value": value})
+        
+        html += render_table(fact_rows)
         
         # Section 7
         s7 = data["section_7_detailed_tech_rating"]
