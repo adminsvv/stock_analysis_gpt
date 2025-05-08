@@ -327,6 +327,14 @@ if submit:
                 Ensure the output is highly structured, uses markdown formatting
         
                 Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
+
+                Decide on `if_holding` and `if_not_holding` based on technical structure.
+                
+                - Use `Sell` if the stock is weak (Stage 4, lower highs/lows, breakdown).
+                - Use `Buy` for existing holders only if momentum is strong and price is above key resistance.
+                - Use `Buy` for non-holders only if breakout, reversal, or trend initiation is confirmed.
+                - Use `Wait` if trend is sideways or at resistance.
+                - Use `Hold` if structure is unclear or still developing.
                 """
             },
         ],
