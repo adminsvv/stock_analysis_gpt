@@ -246,7 +246,7 @@ if submit:
             print("API Error:", response.status_code, response.text)
     else:
         print("No company found with given NSE symbol.")
-        continue
+        
     df = pd.DataFrame(data["data"])
 
     df = df.sort_values('Date')
