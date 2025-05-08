@@ -6,6 +6,7 @@ from datetime import datetime, timedelta,date,time as dt_time
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+from pymongo import MongoClient
 
 st.set_page_config(
     layout="wide",  # 👈 enables wide mode
@@ -49,28 +50,227 @@ def login_block():
 if not login_block():
     st.stop()
 
+json_schema = {
+    "format": {
+        "type": "json_schema",
+        "name": "stock_analysis",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "stock": {"type": "string"},
+                "section_1_current_outlook": {
+                    "type": "object",
+                    "properties": {
+                        "stage": {
+                            "type": "object",
+                            "properties": {
+                                "value": {"type": "integer"},
+                                "comment": {"type": "string"}
+                            },
+                            "required": ["value", "comment"],
+                            "additionalProperties": False
+                        },
+                        "base": {"type": "string"},
+                        
+                        "chart_pattern": {
+                            "type": "object",
+                            "properties": {
+                                "value": {"type": "string", "description": "Exact pattern name (e.g., cup with handle,flag,penant or no pattern)."},
+                                "comment": {"type": "string"}
+                            },
+                            "required": ["value", "comment"],
+                            "additionalProperties": False
+                        },
+                        "overall_outlook_trend": {"type": "string"},
+                        "technical_score": {
+                            "type": "object",
+                            "properties": {
+                                "value": {"type": "number"},
+                                "reason": {"type": "string"}
+                            },
+                            "required": ["value", "reason"],
+                            "additionalProperties": False
+                        },
+                        "risk_score": {
+                            "type": "object",
+                            "properties": {
+                                "value": {"type": "number"},
+                                "reason": {"type": "string"}
+                            },
+                            "required": ["value", "reason"],
+                            "additionalProperties": False
+                        }
+                    },
+                    "required": ["stage", "base","chart_pattern","overall_outlook_trend", "technical_score", "risk_score"],
+                    "additionalProperties": False
+                },
+                "section_2_trend_horizon_buckets": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "horizon": {"type": "string", "enum": ["Short", "Medium", "Long"]},
+                            "status": {"type": "string"},
+                            "key_metrics": {"type": "string"},
+                            "comment": {"type": "string"},
+                            "final_verdict": {
+                                "type": "object",
+                                "properties": {
+                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell"], "description": "If quite bad technically suggest a Sell else Hold."},
+                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"]}
+                                },
+                                "required": ["if_holding", "if_not_holding"],
+                                "additionalProperties": False
+                            }
+                        },
+                        "required": ["horizon","status","key_metrics","comment", "final_verdict"],
+                        "additionalProperties": False
+                    }
+                },
+                "section_3_trade_setup_ideas": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                         "description": "can be left blank if no good trade setup exists",
+                        "properties": {
+                            "trigger": {"type": "string"},
+                            "entry": {"type": "string"},
+                            "stop": {"type": "string"},
+                            "target": {"type": "string"},
+                            "rr": {"type": "string"},
+                            "confidence": {"type": "string"},
+                            "execution_detail": {"type": "string"},
+                            "time_horizon": {"type": "string"}
+                        },
+                        "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
+                        "additionalProperties": False
+                    }
+                },
+                "section_4_support_resistance": {
+                    "type": "object",
+                    "properties": {
+                        "support": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "level": {"type": "string"},
+                                    "note": {"type": "string"}
+                                },
+                                "required": ["level", "note"],
+                                "additionalProperties": False
+                            }
+                        },
+                        "resistance": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "level": {"type": "string"},
+                                    "note": {"type": "string"}
+                                },
+                                "required": ["level", "note"],
+                                "additionalProperties": False
+                            }
+                        }
+                    },
+                    "required": ["support", "resistance"],
+                    "additionalProperties": False
+                },
+                "section_5_price_volume_action": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "section_7_detailed_tech_rating": {
+                    "type": "object",
+                    "properties": {
+                        "technical_rating_overall": {"type": "number"},
+                        "factors": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {"type": "string"},
+                                    "score": {"type": "number"},
+                                    "comment": {"type": "string"}
+                                },
+                                "required": ["name", "score", "comment"],
+                                "additionalProperties": False
+                            }
+                        },
+                        "total_weighted_avg": {"type": "number"}
+                    },
+                    "required": ["technical_rating_overall", "factors", "total_weighted_avg"],
+                    "additionalProperties": False
+                },
+                "section_8_overall_conclusion": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                }
+            },
+            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas", "section_4_support_resistance", "section_5_price_volume_action", "section_7_detailed_tech_rating", "section_8_overall_conclusion"],
+            "additionalProperties": False
+        },
+        "strict":True
+    }
+}
+
+
 with st.form("stock_form"):
     ticker = st.text_input("Enter NSE Symbol (e.g., TCS, INFY)", "MCX")
     submit = st.form_submit_button("Fetch Data")
 
 if submit:
     ticker = ticker.strip().upper()
-    if not ticker.endswith(".NS"):
-        ticker += ".NS"
+
+
+    start_time=datetime.now()
+    client_mongo = MongoClient("mongodb+srv://prachi:Akash5555@stockgpt.fryqpbi.mongodb.net/")  # update if needed
+    db = client_mongo["CAG_CHATBOT"]
+    collection = db["CompaniesDetails"]
+    
+    # Input NSE symbol
+    nse_symbol = ticker
+    doc = collection.find_one({"nsesymbol": ticker.upper()})  # ensure case-insensitive match if needed
+
+    if doc:
+        co_code = doc.get("co_code")
+        print(f"co_code for {ticker}: {co_code}")
+        url = f"https://admin.stocksemoji.com/api/cmot/BSENSEPriceHistorical/nse/{co_code}/d/365"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            #print("Price Data:", data)
+        else:
+            print("API Error:", response.status_code, response.text)
+    else:
+        print("No company found with given NSE symbol.")
+        continue
+    df = pd.DataFrame(data["data"])
+
+    df = df.sort_values('Date')
+
+    # Compute DMA values
+    dma_9 = round(df['Close'].rolling(window=9).mean().iloc[-1], 2)
+    dma_20 = round(df['Close'].rolling(window=20).mean().iloc[-1], 2)
+    dma_50 = round(df['Close'].rolling(window=50).mean().iloc[-1], 2)
+    dma_100 = round(df['Close'].rolling(window=100).mean().iloc[-1], 2)
+    week_52_high= df['HIGH'].max()
+    week_52_low= df['LOW'].min()
+    current_price = df['Close'].iloc[-1]
+    df['NSE_SYMBOL'] = ticker
+    df['Date'] = pd.to_datetime(df['Date'])
+    today = df['Date'].max() 
+
+    df = df[df['Date'] >= today - timedelta(days=150)]
+    df=df[['NSE_SYMBOL','Date','OPEN','HIGH','LOW','Close','Volume']]
+    # data
+    print(df.head())
+    df['Date']=df['Date'].astype(str)
 
     st.write(ticker)
-    all_data_today1 = yf.download(ticker, period="100d", progress=False, interval="1d")
-    all_data_today1= all_data_today1.unstack(level=0)
-    all_data_today1 = all_data_today1.unstack(level=0)
-    all_data_today1 = all_data_today1.reset_index()
-    all_data_today1.head()
-    # all_data_today1['Date'] = all_data_today1['Date'].astype(str)
-    all_data_today1['Date'] = pd.to_datetime(all_data_today1['Date'])
-    all_data_today1=all_data_today1[all_data_today1['Date']<=(datetime.today() - timedelta(days=1))]
-    st.write(all_data_today1.tail())
 
-    all_data_today1['Date'] = pd.to_datetime(all_data_today1['Date'])
-    all_data_today1['Date'] = all_data_today1['Date'].dt.strftime('%Y-%m-%d')  # remove time component for display
     
     # Create subplots
     fig = make_subplots(
@@ -81,14 +281,14 @@ if submit:
     
     # Close Price Line Chart
     fig.add_trace(go.Scatter(
-        x=all_data_today1['Date'], y=all_data_today1['Close'],
+        x=df['Date'], y=df['Close'],
         mode='lines', name='Close Price',
         line=dict(color='blue')
     ), row=1, col=1)
     
     # Volume Bar Chart
     fig.add_trace(go.Bar(
-        x=all_data_today1['Date'], y=all_data_today1['Volume'],
+        x=df['Date'], y=df['Volume'],
         name='Volume',
         marker_color='green'
     ), row=2, col=1)
@@ -106,71 +306,12 @@ if submit:
     )
     
     st.plotly_chart(fig, use_container_width=True)
-    all_data_today1['Date'] = all_data_today1['Date'].astype(str)
+    df['Date'] = all_data_today1['Date'].astype(str)
     
     # st.dataframe(all_data_today1)
     # text_data = all_data_today1.to_string(index=False)
-    if not all_data_today1.empty:
-        text_data = all_data_today1.to_json(orient='records', lines=True)
-        
-
-
-        prompt = f"""
-        You are a technical stock analyst. Perform an in-depth technical analysis of the stock: {text_data}, using OHLCV (Open, High, Low, Close, Volume) data **.
-
-        Your response should include:
-
-        1. A clearly written introduction specifying the date range and the purpose of comparison.
-        2. A detailed table comparing both stocks on the following metrics:
-        - Start and End Price (Close)
-        - Absolute Price Change (%)
-        - Highest and Lowest Prices
-        - Maximum Drawdown (%)
-        - Volatility (qualitative)
-        - Volume Patterns and Liquidity
-        - Notable Rallies and Corrections
-        - Trend Structure
-        - Support and Resistance Levels
-        - Breakout Moves
-        - Relative Strength
-        - Volume Confirmation
-        - Volatility (ATR proxy if possible)
-        - Recovery Pattern
-        - Sector Sensitivity
-        - Overall Technical Bias
-        - short term 
-            -Mid Term
-            -Long Term 
-            - Define important bases 
-        -Tell stages 1,2,3,4 
-        -Mark patterns ( FLag , Pennant , Cup and Handle ) 
-        -Show  major SL and Targets
-        - Technical Rating
-        -Risk Score
-
-
-        3. A final conclusion table with these columns:
-        - Ticker
-        - Technical Rating (scale of 1 to 10)
-        - Trend
-        - Volatility
-        - Relative Strength
-        - Volume Confirmation
-        - Liquidity
-        - Final Technical Bias
-
-
-        Ensure the output is highly structured, uses markdown formatting
-
-        Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
-
-        Stocks: 
-
-
-        Now begin your analysis.
-        """
-
-
+    if not df.empty:
+        text_data = df.to_json(orient='records', lines=True)
 
         response = client.responses.create(
         model="gpt-4.1",
@@ -178,14 +319,96 @@ if submit:
             {"role": "system", "content": "You are a technical chart analyst"},
             {
                 "role": "user",
-                "content": prompt
-            }
-        ]
-
-
+                "content": f"""you are a techincal analyst based on the ohlcv data of a stock {text_data} provide the answer
+                Ensure the output is highly structured, uses markdown formatting
+        
+                Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
+                """
+            },
+        ],
+            text=json_schema
         )
+        output_text=response.output_text.strip().replace("```json", "").replace("```", "").strip()
+        data = json.loads(output_text)
 
-        st.write(response.output_text)
+        def render_section_title(title):
+            return f"<h2 style='color:#2e6f9e;border-bottom:2px solid #ccc;padding-bottom:4px;margin-top:20px'>{title}</h2>"
+        
+        def render_key_value(label, value):
+            return f"<p><strong>{label}:</strong> {value}</p>"
+        
+        def render_list(items):
+            return "<ul>" + "".join(f"<li>{item}</li>" for item in items) + "</ul>"
+        
+        def render_table(rows):
+            if not rows: return ""
+            headers = rows[0].keys()
+            table = "<table style='width:100%;border-collapse:collapse;border:1px solid #ccc'>"
+            table += "<tr>" + "".join(f"<th style='border:1px solid #ccc;padding:6px'>{h}</th>" for h in headers) + "</tr>"
+            for row in rows:
+                table += "<tr>" + "".join(f"<td style='border:1px solid #ccc;padding:6px'>{row[h]}</td>" for h in headers) + "</tr>"
+            table += "</table>"
+            return table
+        
+        
+        # ---------- 3. Compose the HTML content ----------
+        html = f"<html><head><meta charset='utf-8'><title>Technical Report - {data['stock']}</title></head><body style='font-family:Segoe UI;padding:20px'>"
+        
+        html += f"<h1>Technical Analysis Report: {data['stock']}</h1>"
+        
+        # Section 1
+        s1 = data["section_1_current_outlook"]
+        html += render_section_title("1. Current Outlook")
+        html += render_key_value("Stage", f"{s1['stage']['value']} - {s1['stage']['comment']}")
+        html += render_key_value("Base", s1['base'])
+        html += render_key_value("Chart Pattern", f"{s1['chart_pattern']['value']} – {s1['chart_pattern']['comment']}")
+        html += render_key_value("Overall Outlook/Trend", s1['overall_outlook_trend'])
+        html += render_key_value("Technical Score", f"{s1['technical_score']['value']} – {s1['technical_score']['reason']}")
+        html += render_key_value("Risk Score", f"{s1['risk_score']['value']} – {s1['risk_score']['reason']}")
+        
+        # Section 2
+        html += render_section_title("2. Trend Horizons")
+        
+        trend_rows = []
+        for bucket in data["section_2_trend_horizon_buckets"]:
+            trend_rows.append({
+                "Horizon": bucket["horizon"],
+                "Status": bucket["status"],
+                "Key Metrics": bucket["key_metrics"],
+                "Comment": bucket["comment"],
+                "If Holding": bucket["final_verdict"]["if_holding"],
+                "If Not Holding": bucket["final_verdict"]["if_not_holding"]
+            })
+        
+        html += render_table(trend_rows)
+        
+        # Section 3
+        html += render_section_title("3. Trade Setup Ideas")
+        html += render_table(data["section_3_trade_setup_ideas"])
+        
+        # Section 4
+        html += render_section_title("4. Support and Resistance")
+        html += "<h4>Support Levels</h4>" + render_table(data["section_4_support_resistance"]["support"])
+        html += "<h4>Resistance Levels</h4>" + render_table(data["section_4_support_resistance"]["resistance"])
+        
+        # Section 5
+        html += render_section_title("5. Price-Volume Action")
+        html += render_list(data["section_5_price_volume_action"])
+        
+        # Section 7
+        s7 = data["section_7_detailed_tech_rating"]
+        html += render_section_title("6. Technical Rating")
+        html += render_key_value("Overall Rating", s7["technical_rating_overall"])
+        html += render_table(s7["factors"])
+        
+        # Section 8
+        html += render_section_title("7. Overall Conclusion")
+        html += render_list(data["section_8_overall_conclusion"])
+        
+        html += "</body></html>"
+        
+        st.markdown(html, unsafe_allow_html=True)
+
         input_cost=response.usage.input_tokens*2*90/1000000
         output_cost=response.usage.output_tokens*8*90/1000000
         st.write("Input Cost :" , input_cost)
