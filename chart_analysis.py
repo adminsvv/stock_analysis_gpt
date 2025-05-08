@@ -307,10 +307,10 @@ if submit:
     )
     
     st.plotly_chart(fig, use_container_width=True)
-    df['Date'] = all_data_today1['Date'].astype(str)
+    df['Date'] = df['Date'].astype(str)
     
-    # st.dataframe(all_data_today1)
-    # text_data = all_data_today1.to_string(index=False)
+    # st.dataframe(df)
+    # text_data = df.to_string(index=False)
     if not df.empty:
         text_data = df.to_json(orient='records', lines=True)
 
