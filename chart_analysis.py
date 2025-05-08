@@ -119,7 +119,7 @@ json_schema = {
                                 "type": "object",
                                 "properties": {
                                     "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell"], "description": "If quite bad technically suggest a Sell else Hold."},
-                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"]}
+                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"], "description": "If stock is technically coming out good suggest Buy."}
                                 },
                                 "required": ["if_holding", "if_not_holding"],
                                 "additionalProperties": False
@@ -133,7 +133,7 @@ json_schema = {
                     "type": "array",
                     "items": {
                         "type": "object",
-                         "description": "can be left blank if no good trade setup exists",
+                         "description": "can be left blank if no good trade setup exists. Preferable 2 setups",
                         "properties": {
                             "trigger": {"type": "string"},
                             "entry": {"type": "string"},
