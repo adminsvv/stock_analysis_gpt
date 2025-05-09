@@ -136,12 +136,12 @@ json_schema = {
                          "description": "can be left blank if no good trade setup exists. If good setups give 2 tradesetups",
                         "properties": {
                             "trigger": {"type": "string"},
-                            "entry": {"type": "string"},
-                            "stop": {"type": "string"},
-                            "target": {"type": "string"},
-                            "rr": {"type": "string"},
+                            "entry": {"type": "number"},
+                            "stop": {"type": "number"},
+                            "target": {"type": "string","description":"Leave blank if it looks a good trade and no profit booking needed"},
+                            "rr": {"type": "number"},
                             "confidence": {"type": "string"},
-                            "execution_detail": {"type": "string"},
+                            "execution_detail": {"type": "string","description":"Deatiled execution plan"},
                             "time_horizon": {"type": "string"}
                         },
                         "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
@@ -178,7 +178,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "string"},
+                                    "level": {"type": "number"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
@@ -190,7 +190,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "string"},
+                                    "level": {"type": "number"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
