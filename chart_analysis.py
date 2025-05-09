@@ -118,10 +118,8 @@ json_schema = {
                             "final_verdict": {
                                 "type": "object",
                                 "properties": {
-                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell"], "description": "Use 'Sell' if the stock is clearly weak technically (e.g., downtrend, breakdown). Use 'Hold' if there is no strong reason to exit. Use 'Buy' only if strong technical improvement and already holding."},
-                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy"], "description": "Use 'Buy' if technicals show clear breakout, reversal, or strong base. Use 'Wait' if setup is unclear, risky, or still developing."}
-  
-
+                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell","Recuce"], "description": "If quite bad technically suggest a Sell else Hold."},
+                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy","Avoid"]}
                                 },
                                 "required": ["if_holding", "if_not_holding"],
                                 "additionalProperties": False
@@ -135,7 +133,7 @@ json_schema = {
                     "type": "array",
                     "items": {
                         "type": "object",
-                         "description": "can be left blank if no good trade setup exists. Preferable 2 setups",
+                         "description": "can be left blank if no good trade setup exists. If good setups give 2 tradesetups",
                         "properties": {
                             "trigger": {"type": "string"},
                             "entry": {"type": "string"},
@@ -150,6 +148,28 @@ json_schema = {
                         "additionalProperties": False
                     }
                 },
+                "section_3.1_trade_setup_fno_ideas": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                         "description": "Give me fno strategies atleast 2",
+                        "properties": {
+                            "Option strategy type": {"type": "string"},
+                            "entry": {"type": "string"},
+                            "stop": {"type": "string"},
+                            "target": {"type": "string"},
+                            "rr": {"type": "string"},
+                            "payoff": {"type": "string"},
+                            
+                            "confidence": {"type": "string"},
+                            "execution_detail": {"type": "string"},
+                            "time_horizon": {"type": "string"}
+                        },
+                        "required": ["Option strategy type", "entry", "stop", "target", "rr", "payoff","confidence", "execution_detail", "time_horizon"],
+                        "additionalProperties": False
+                    }
+                },
+                
                 "section_4_support_resistance": {
                     "type": "object",
                     "properties": {
@@ -185,7 +205,88 @@ json_schema = {
                     "type": "array",
                     "items": {"type": "string"}
                 },
-                "section_7_detailed_tech_rating": {
+                "section_6_index_correlation": {
+                  "type": "object",
+                  "properties": {
+                    "index_name": {
+                      "type": "string",
+                      "description": "The name of the index relevant to the stock's market cap type (e.g., NIFTY, MIDCAP100)."
+                    },
+                    "index_ema_20": {
+                      "type": "number",
+                      "description": "20-day EMA of the mapped index."
+                    },
+                    "index_ema_50": {
+                      "type": "number",
+                      "description": "50-day EMA of the mapped index."
+                    },
+                    "index_ema_100": {
+                      "type": "number",
+                      "description": "100-day EMA of the mapped index."
+                    },
+                    "correlation_type": {
+                  "type": "string",
+                  "enum": ["Leading", "Lagging", "In Sync", "Decoupled", "Converging", "Diverging"],
+                  "description": "One-word summary of how the stock is behaving relative to the index."
+                    },
+                    "correlation_comment": {
+                      "type": "string",
+                      "description": "Interpretation of how the stock's trend aligns or diverges from the index trend (e.g., 'Stock is outperforming index', 'Tracking index closely', etc.)"
+                    }
+                  },
+                  "required": ["index_name", "index_ema_20", "index_ema_50", "index_ema_100","correlation_type","correlation_comment"],
+                    "additionalProperties": False
+                },
+                "section_7_extended_moves": {
+                  "type": "object",
+                  "properties": {
+                    "is_extended": {
+                      "type": "boolean",
+                      "description": "True if the stock is significantly extended from key moving averages.'10% from 10 SMA, 20% from 20 EMA, 50% from 50 SMA'"
+                    },
+                    "extension_description": {
+                      "type": "string",
+                      "description": "Describes the degree of extension, e.g., '10% from 10 SMA, 20% from 20 EMA, 50% from 50 SMA'."
+                    },
+                    "profit_booking_note": {
+                      "type": "string",
+                      "description": "Suggested action if holding, such as partial or full profit booking based on extension level."
+                    }
+       
+                  },
+                  "required": ["is_extended", "extension_description", "profit_booking_note"],
+                  "additionalProperties": False
+                },
+                "section_8_distance_from_breakout": {
+                  "type": "object",
+                  "properties": {
+                    "distance_from_breakout_perc": {
+                      "type": "number",
+                      "description": "Percentage gain from the last confirmed breakout level. Positive if above breakout."
+                    },
+                    "breakout_level": {
+                      "type": "number",
+                      "description": "The price at which the last attempted breakout occurred."
+                    },
+                    "current_price": {
+                      "type": "number",
+                      "description": "The current market price of the stock."
+                    },
+                    "breakout_date": {
+                      "type": "string",
+                     
+                      "description": "The time period when last attempted breakout happened."
+                    },
+                    "profit_booking_note": {
+                      "type": "string",
+                      "description": "Suggested action depending on how far the stock has run from breakout, e.g., 'Trail stop-loss' or 'Consider partial exit'."
+                    }
+                  },
+                  "required": ["distance_from_breakout_perc", "breakout_level", "current_price", "breakout_date", "profit_booking_note"],
+                  "additionalProperties": False
+                },
+                
+                "section_9_detailed_tech_rating": {
                     "type": "object",
                     "properties": {
                         "technical_rating_overall": {"type": "number"},
@@ -207,17 +308,18 @@ json_schema = {
                     "required": ["technical_rating_overall", "factors", "total_weighted_avg"],
                     "additionalProperties": False
                 },
-                "section_8_overall_conclusion": {
+                "section_10_overall_conclusion": {
                     "type": "array",
                     "items": {"type": "string"}
                 }
             },
-            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas", "section_4_support_resistance", "section_5_price_volume_action", "section_7_detailed_tech_rating", "section_8_overall_conclusion"],
+            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion"],
             "additionalProperties": False
         },
         "strict":True
     }
 }
+
 
 
 with st.form("stock_form"):
@@ -232,6 +334,36 @@ if submit:
     client_mongo = MongoClient("mongodb+srv://prachi:Akash5555@stockgpt.fryqpbi.mongodb.net/")  # update if needed
     db = client_mongo["CAG_CHATBOT"]
     collection = db["CompaniesDetails"]
+    index_map = {
+    "Large Cap": "NIFTY",
+    "Mid Cap": "NMIDCAP150",
+    "Small Cap": "SMALLCA250"
+    }
+
+    # Step 3: Precompute index EMAs
+    index_ema_map = {}
+    
+    for mcaptype, index_symbol in index_map.items():
+        doc_index = collection.find_one({"nsesymbol": index_symbol.upper()})
+        if doc_index:
+            index_code = doc_index.get("co_code")
+        url = f"https://admin.stocksemoji.com/api/cmot/BSENSEPriceHistorical/nse/{index_code}/d/365"
+        resp = requests.get(url)
+    
+        if resp.status_code != 200:
+            print(f"❌ EMA fetch failed for {index_symbol}")
+            continue
+    
+        df = pd.DataFrame(resp.json()["data"]).sort_values("Date")
+        #df.columns = [col.upper() for col in df.columns]
+    
+        index_ema_map[mcaptype] = {
+            "Index": index_symbol,
+            "EMA_20": round(df["Close"].ewm(span=20, adjust=False).mean().iloc[-1], 2),
+            "EMA_50": round(df["Close"].ewm(span=50, adjust=False).mean().iloc[-1], 2),
+            "EMA_100": round(df["Close"].ewm(span=100, adjust=False).mean().iloc[-1], 2)
+        }
+
     
     # Input NSE symbol
     nse_symbol = ticker
@@ -242,14 +374,21 @@ if submit:
         print(f"co_code for {ticker}: {co_code}")
         url = f"https://admin.stocksemoji.com/api/cmot/BSENSEPriceHistorical/nse/{co_code}/d/365"
         response = requests.get(url)
+        mcaptype = doc.get("mcaptype")  # Default to Large Cap
+        index_ema = index_ema_map.get(mcaptype)
 
         if response.status_code == 200:
             data = response.json()
             #print("Price Data:", data)
+        url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/NSE/{co_code}/H/d/110"
+        response_dv = requests.get(url_dv)
+        if response_dv.status_code == 200:
+            data_dv = response_dv.json()
         else:
             print("API Error:", response.status_code, response.text)
     else:
         print("No company found with given NSE symbol.")
+        
         
     df = pd.DataFrame(data["data"])
 
@@ -268,6 +407,10 @@ if submit:
     today = df['Date'].max() 
 
     df = df[df['Date'] >= today - timedelta(days=150)]
+    df_dv=pd.DataFrame(data_dv["data"])
+    df_dv['tr_date'] = pd.to_datetime(df_dv['tr_date']).dt.strftime('%Y-%m-%d')
+    df_dv['tr_date']=df_dv['tr_date'].astype(str)
+    df_dv.rename(columns={'tr_date': 'Date'}, inplace=True)
     df=df[['NSE_SYMBOL','Date','OPEN','HIGH','LOW','Close','Volume']]
     # data
     print(df.head())
@@ -311,6 +454,7 @@ if submit:
     
     st.plotly_chart(fig, use_container_width=True)
     df['Date'] = df['Date'].astype(str)
+    df=df.merge(df_dv[['Date','DevlieryVolume']],how='left',on='Date')
     
     # st.dataframe(df)
     # text_data = df.to_string(index=False)
@@ -323,9 +467,15 @@ if submit:
             {"role": "system", "content": "You are a technical chart analyst"},
             {
                 "role": "user",
-                "content": f"""you are a techincal analyst based on the ohlcv data of a stock {text_data} provide the answer
-                Ensure the output is highly structured, uses markdown formatting
-        
+                "content": f"""you are a techincal analyst based on the ohlcv data and delivery volumeof a stock {text_data} provide the answer
+                Delivery Volume: No of stocks that were taken as delivery and not intraday
+               
+                You are also given teh EMA for the Index assocaited with the stock
+                     Market Cap Type: {mcaptype}
+                    " Index: {index_ema['Index']}
+                    "EMA-20: {index_ema['EMA_20']}, EMA-50: {index_ema['EMA_50']}, EMA-100: {index_ema['EMA_100']}
+          
+                 Ensure the output is highly structured, uses markdown formatting
                 Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
 
                 Decide on `if_holding` and `if_not_holding` based on technical structure.
@@ -335,6 +485,7 @@ if submit:
                 - Use `Buy` for non-holders only if breakout, reversal, or trend initiation is confirmed.
                 - Use `Wait` if trend is sideways or at resistance.
                 - Use `Hold` if structure is unclear or still developing.
+                
                 """
             },
         ],
@@ -343,7 +494,7 @@ if submit:
         output_text=response.output_text.strip().replace("```json", "").replace("```", "").strip()
         data = json.loads(output_text)
 
-        data["section_6_fact_metrics"] = {
+        data["section_11_fact_metrics"] = {
             "current_price": {"value": current_price},
             "week_52_high": {"value": week_52_high},
             "week_52_low": {"value": week_52_low},
@@ -375,6 +526,26 @@ if submit:
         
         
         # ---------- 3. Compose the HTML content ----------
+        def render_section_title(title):
+            return f"<h2 style='color:#2e6f9e;border-bottom:2px solid #ccc;padding-bottom:4px;margin-top:20px'>{title}</h2>"
+
+        def render_key_value(label, value):
+            return f"<p><strong>{label}:</strong> {value}</p>"
+        
+        def render_list(items):
+            return "<ul>" + "".join(f"<li>{item}</li>" for item in items) + "</ul>"
+        
+        def render_table(rows):
+            if not rows: return ""
+            headers = rows[0].keys()
+            table = "<table style='width:100%;border-collapse:collapse;border:1px solid #ccc'>"
+            table += "<tr>" + "".join(f"<th style='border:1px solid #ccc;padding:6px'>{h}</th>" for h in headers) + "</tr>"
+            for row in rows:
+                table += "<tr>" + "".join(f"<td style='border:1px solid #ccc;padding:6px'>{row[h]}</td>" for h in headers) + "</tr>"
+            table += "</table>"
+            return table
+        
+        # ---------- 3. Compose the HTML content ----------
         html = f"<html><head><meta charset='utf-8'><title>Technical Report - {data['stock']}</title></head><body style='font-family:Segoe UI;padding:20px'>"
         
         html += f"<h1>Technical Analysis Report: {data['stock']}</h1>"
@@ -391,7 +562,6 @@ if submit:
         
         # Section 2
         html += render_section_title("2. Trend Horizons")
-        
         trend_rows = []
         for bucket in data["section_2_trend_horizon_buckets"]:
             trend_rows.append({
@@ -402,12 +572,15 @@ if submit:
                 "If Holding": bucket["final_verdict"]["if_holding"],
                 "If Not Holding": bucket["final_verdict"]["if_not_holding"]
             })
-        
         html += render_table(trend_rows)
         
         # Section 3
         html += render_section_title("3. Trade Setup Ideas")
         html += render_table(data["section_3_trade_setup_ideas"])
+        
+        # Section 3.1
+        html += render_section_title("3.1 F&O Trade Setup Ideas")
+        html += render_table(data["section_3.1_trade_setup_fno_ideas"])
         
         # Section 4
         html += render_section_title("4. Support and Resistance")
@@ -417,26 +590,42 @@ if submit:
         # Section 5
         html += render_section_title("5. Price-Volume Action")
         html += render_list(data["section_5_price_volume_action"])
-
-        html += render_section_title("6. Fact Metrics")
-
-        fact_rows = []
-        for k, v in data["section_6_fact_metrics"].items():
-            label = k.replace("_", " ").title()
-            value = v.get("value", "N/A")
-            fact_rows.append({"Metric": label, "Value": value})
         
-        html += render_table(fact_rows)
+        # Section 6
+        s6 = data["section_6_index_correlation"]
+        html += render_section_title("6. Index Correlation")
+        html += render_key_value("Index Name", s6["index_name"])
+        html += render_key_value("EMA-20", s6["index_ema_20"])
+        html += render_key_value("EMA-50", s6["index_ema_50"])
+        html += render_key_value("EMA-100", s6["index_ema_100"])
+        html += render_key_value("Correlation Type", s6["correlation_type"])
+        html += render_key_value("Comment", s6["correlation_comment"])
         
         # Section 7
-        s7 = data["section_7_detailed_tech_rating"]
-        html += render_section_title("6. Technical Rating")
-        html += render_key_value("Overall Rating", s7["technical_rating_overall"])
-        html += render_table(s7["factors"])
+        s7 = data["section_7_extended_moves"]
+        html += render_section_title("7. Extended Moves")
+        html += render_key_value("Is Extended", s7["is_extended"])
+        html += render_key_value("Extension Description", s7["extension_description"])
+        html += render_key_value("Profit Booking Note", s7["profit_booking_note"])
         
         # Section 8
-        html += render_section_title("7. Overall Conclusion")
-        html += render_list(data["section_8_overall_conclusion"])
+        s8 = data["section_8_distance_from_breakout"]
+        html += render_section_title("8. Distance from Breakout")
+        html += render_key_value("Distance from Breakout (%)", s8["distance_from_breakout_perc"])
+        html += render_key_value("Breakout Level", s8["breakout_level"])
+        html += render_key_value("Current Price", s8["current_price"])
+        html += render_key_value("Breakout Date", s8["breakout_date"])
+        html += render_key_value("Profit Booking Note", s8["profit_booking_note"])
+        
+        # Section 9
+        s9 = data["section_9_detailed_tech_rating"]
+        html += render_section_title("9. Technical Rating")
+        html += render_key_value("Overall Rating", s9["technical_rating_overall"])
+        html += render_table(s9["factors"])
+        
+        # Section 10
+        html += render_section_title("10. Overall Conclusion")
+        html += render_list(data["section_10_overall_conclusion"])
         
         html += "</body></html>"
         
