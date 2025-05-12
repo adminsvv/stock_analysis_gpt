@@ -118,7 +118,7 @@ json_schema = {
                             "final_verdict": {
                                 "type": "object",
                                 "properties": {
-                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell","Recuce"], "description": "If quite bad technically suggest a Sell else Hold."},
+                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell","Reduce","Increase"], "description": "If quite bad technically suggest a Sell else Hold.If looking good and consolidating Increase"},
                                     "if_not_holding": {"type": "string", "enum": ["Wait", "Buy","Avoid"]}
                                 },
                                 "required": ["if_holding", "if_not_holding"],
@@ -295,9 +295,13 @@ json_schema = {
                     "correlation_comment": {
                       "type": "string",
                       "description": "Interpretation of how the stock's trend aligns or diverges from the index trend (e.g., 'Stock is outperforming index', 'Tracking index closely', etc.)"
-                    }
+                    },
+                      "Correlation_Factor": {
+                      "type": "number",
+                      "description": "Correlation between index and stock"
+                    },
                   },
-                  "required": ["index_name", "index_ema_20", "index_ema_50", "index_ema_100","correlation_type","correlation_comment"],
+                  "required": ["index_name", "index_ema_20", "index_ema_50", "index_ema_100","correlation_type","correlation_comment","Correlation Factor"],
                     "additionalProperties": False
                 },
                 "section_7_extended_moves": {
@@ -559,7 +563,7 @@ if submit:
 
         data["section_11_fact_metrics"] = {
             "current_price": {"value": current_price},
-            "week_52_high": {"value": week_52_high},
+            "week_52_high": {"value": week_52_high},rc
             "week_52_low": {"value": week_52_low},
             "dma_9": {"value": dma_9},
             "dma_20": {"value": dma_20},
@@ -675,6 +679,8 @@ if submit:
         html += render_key_value("EMA-100", s6["index_ema_100"])
         html += render_key_value("Correlation Type", s6["correlation_type"])
         html += render_key_value("Comment", s6["correlation_comment"])
+        html += render_key_value("Correlation Factor", s6["Correlation_Factor"])
+        
         
         # Section 7
         s7 = data["section_7_extended_moves"]
