@@ -647,7 +647,7 @@ if submit:
             ("long_term", "📅 Long-Term Setups")
         ]:
             if data["section_3_trade_setup_ideas"].get(horizon_label):
-                html += render_subsection_title(horizon_title)
+                html += render_section_title(horizon_title)
                 html += render_table(data["section_3_trade_setup_ideas"][horizon_label])
             else:
                 html += f"<p><i>No {horizon_title.lower()} available.</i></p>"
