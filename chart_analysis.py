@@ -130,24 +130,87 @@ json_schema = {
                     }
                 },
                 "section_3_trade_setup_ideas": {
-                    "type": "array",
-                    "items": {
+                  "type": "object",
+                  "properties": {
+                    "short_term": {
+                      "type": "array",
+                      "description": "Short-term trades (1- 10 days). Can be left blank if no good setup.",
+                      "items": {
                         "type": "object",
-                         "description": "can be left blank if no good trade setup exists. If good setups give 2 tradesetups",
                         "properties": {
-                            "trigger": {"type": "string"},
-                            "entry": {"type": "number"},
-                            "stop": {"type": "number"},
-                            "target": {"type": "string","description":"Leave blank if it looks a good trade and no profit booking needed"},
-                            "rr": {"type": "number"},
-                            "confidence": {"type": "string"},
-                            "execution_detail": {"type": "string","description":"Deatiled execution plan"},
-                            "time_horizon": {"type": "string"}
+                          "trigger": { "type": "string" },
+                          "entry": { "type": "number" },
+                          "stop": { "type": "number" },
+                          "target": {
+                            "type": "string",
+                            "description": "Leave blank if it looks a good trade and no profit booking needed"
+                          },
+                          "rr": { "type": "number" },
+                          "confidence": { "type": "string" },
+                          "execution_detail": {
+                            "type": "string",
+                            "description": "Detailed execution plan"
+                          },
+                          "time_horizon": { "type": "string", "enum": ["Short"] }
                         },
                         "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
-                        "additionalProperties": False
+                        "additionalProperties": false
+                      }
+                    },
+                    "mid_term": {
+                      "type": "array",
+                      "description": "Mid-term trades (typically 1- 3 months).",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "trigger": { "type": "string" },
+                          "entry": { "type": "number" },
+                          "stop": { "type": "number" },
+                          "target": {
+                            "type": "string",
+                            "description": "Leave blank if it looks a good trade and no profit booking needed"
+                          },
+                          "rr": { "type": "number" },
+                          "confidence": { "type": "string" },
+                          "execution_detail": {
+                            "type": "string",
+                            "description": "Detailed execution plan"
+                          },
+                          "time_horizon": { "type": "string", "enum": ["Mid"] }
+                        },
+                        "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "long_term": {
+                      "type": "array",
+                      "description": "Long-term trades (typically months or more).",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "trigger": { "type": "string" },
+                          "entry": { "type": "number" },
+                          "stop": { "type": "number" },
+                          "target": {
+                            "type": "string",
+                            "description": "Leave blank if it looks a good trade and no profit booking needed"
+                          },
+                          "rr": { "type": "number" },
+                          "confidence": { "type": "string" },
+                          "execution_detail": {
+                            "type": "string",
+                            "description": "Detailed execution plan"
+                          },
+                          "time_horizon": { "type": "string", "enum": ["Long"] }
+                        },
+                        "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
+                        "additionalProperties": false
+                      }
                     }
-                },
+                  },
+                  "required": ["short_term", "mid_term", "long_term"],
+                  "additionalProperties": false
+                }
                 "section_3.1_trade_setup_fno_ideas": {
                     "type": "array",
                     "items": {
@@ -574,9 +637,21 @@ if submit:
             })
         html += render_table(trend_rows)
         
-        # Section 3
+# Section 3
         html += render_section_title("3. Trade Setup Ideas")
-        html += render_table(data["section_3_trade_setup_ideas"])
+        
+        # Loop through each time horizon
+        for horizon_label, horizon_title in [
+            ("short_term", "🕒 Short-Term Setups"),
+            ("mid_term", "📆 Mid-Term Setups"),
+            ("long_term", "📅 Long-Term Setups")
+        ]:
+            if data["section_3_trade_setup_ideas"].get(horizon_label):
+                html += render_subsection_title(horizon_title)
+                html += render_table(data["section_3_trade_setup_ideas"][horizon_label])
+            else:
+                html += f"<p><i>No {horizon_title.lower()} available.</i></p>"
+
         
         # Section 3.1
         html += render_section_title("3.1 F&O Trade Setup Ideas")
