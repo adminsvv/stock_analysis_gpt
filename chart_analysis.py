@@ -563,7 +563,7 @@ if submit:
 
         data["section_11_fact_metrics"] = {
             "current_price": {"value": current_price},
-            "week_52_high": {"value": week_52_high},rc
+            "week_52_high": {"value": week_52_high},
             "week_52_low": {"value": week_52_low},
             "dma_9": {"value": dma_9},
             "dma_20": {"value": dma_20},
