@@ -379,7 +379,7 @@ json_schema = {
                     "type": "array",
                     "items": {"type": "string"}
                 },
-                {
+                
                   "section_11_scenario_map": {
                     "type": "array",
                     "description": "Defines conditional trading scenarios in a structured format for alerting and automation.",
@@ -421,10 +421,10 @@ json_schema = {
                         "target_zone",
                         "action"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties": False
                     }
                   }
-                }
+                
             },
             "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion","section_11_scenario_map"],
             "additionalProperties": False
