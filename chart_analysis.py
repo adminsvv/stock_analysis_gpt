@@ -388,8 +388,7 @@ json_schema = {
                       "properties": {
                         "direction": {
                           "type": "string",
-                          "enum": ["upside", "downside"],
-                          "description": "Directional bias of the scenario."
+                          "enum": ["upside", "downside"]
                         },
                         "price_trigger": {
                           "type": "number",
@@ -401,16 +400,13 @@ json_schema = {
                           "description": "Condition for price comparison against price_trigger."
                         },
                         "delivery_pct_threshold": {
-                          "type": "number",
-                          "description": "Minimum delivery percentage required for trigger confirmation."
+                          "type": "number"
                         },
                         "target_zone": {
-                          "type": "string",
-                          "description": "Expected price target once the scenario is triggered."
+                          "type": "string"
                         },
                         "action": {
-                          "type": "string",
-                          "description": "Suggested action (e.g., alert only, enter long, avoid trade)."
+                          "type": "string"
                         }
                       },
                       "required": [
