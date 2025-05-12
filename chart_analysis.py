@@ -210,7 +210,7 @@ json_schema = {
                   },
                   "required": ["short_term", "mid_term", "long_term"],
                   "additionalProperties": false
-                }
+                },
                 "section_3.1_trade_setup_fno_ideas": {
                     "type": "array",
                     "items": {
