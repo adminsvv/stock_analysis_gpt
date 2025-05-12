@@ -378,9 +378,55 @@ json_schema = {
                 "section_10_overall_conclusion": {
                     "type": "array",
                     "items": {"type": "string"}
+                },
+                {
+                  "section_11_scenario_map": {
+                    "type": "array",
+                    "description": "Defines conditional trading scenarios in a structured format for alerting and automation.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "direction": {
+                          "type": "string",
+                          "enum": ["upside", "downside"],
+                          "description": "Directional bias of the scenario."
+                        },
+                        "price_trigger": {
+                          "type": "number",
+                          "description": "The price level that must be breached to activate the scenario."
+                        },
+                        "price_condition": {
+                          "type": "string",
+                          "enum": [">", "<", ">=", "<="],
+                          "description": "Condition for price comparison against price_trigger."
+                        },
+                        "delivery_pct_threshold": {
+                          "type": "number",
+                          "description": "Minimum delivery percentage required for trigger confirmation."
+                        },
+                        "target_zone": {
+                          "type": "string",
+                          "description": "Expected price target once the scenario is triggered."
+                        },
+                        "action": {
+                          "type": "string",
+                          "description": "Suggested action (e.g., alert only, enter long, avoid trade)."
+                        }
+                      },
+                      "required": [
+                        "direction",
+                        "price_trigger",
+                        "price_condition",
+                        "delivery_pct_threshold",
+                        "target_zone",
+                        "action"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
                 }
             },
-            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion"],
+            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion","section_11_scenario_map"],
             "additionalProperties": False
         },
         "strict":True
@@ -709,6 +755,20 @@ if submit:
         html += render_list(data["section_10_overall_conclusion"])
         
         html += "</body></html>"
+        # Section 11
+        html += render_section_title("11. Scenario Map")
+        
+        # Render each scenario as a structured list or table row
+        scenario_map = data.get("section_11_scenario_map", [])
+        if scenario_map:
+            html += "<table><thead><tr><th>Direction</th><th>Condition</th><th>Delivery %</th><th>Target Zone</th><th>Action</th></tr></thead><tbody>"
+            for scenario in scenario_map:
+                condition_str = f"Price {scenario['price_condition']} {scenario['price_trigger']}"
+                html += f"<tr><td>{scenario['direction'].capitalize()}</td><td>{condition_str}</td><td>{scenario['delivery_pct_threshold']}%</td><td>{scenario['target_zone']}</td><td>{scenario['action']}</td></tr>"
+            html += "</tbody></table>"
+        else:
+            html += "<p>No scenario map available.</p>"
+
         
         st.markdown(html, unsafe_allow_html=True)
 
