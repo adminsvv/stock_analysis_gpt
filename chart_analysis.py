@@ -301,7 +301,7 @@ json_schema = {
                       "description": "Correlation between index and stock"
                     },
                   },
-                  "required": ["index_name", "index_ema_20", "index_ema_50", "index_ema_100","correlation_type","correlation_comment","Correlation Factor"],
+                  "required": ["index_name", "index_ema_20", "index_ema_50", "index_ema_100","correlation_type","correlation_comment","Correlation_Factor"],
                     "additionalProperties": False
                 },
                 "section_7_extended_moves": {
