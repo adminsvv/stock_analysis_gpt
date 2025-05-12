@@ -154,7 +154,7 @@ json_schema = {
                           "time_horizon": { "type": "string", "enum": ["Short"] }
                         },
                         "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
-                        "additionalProperties": false
+                        "additionalProperties": False
                       }
                     },
                     "mid_term": {
@@ -179,7 +179,7 @@ json_schema = {
                           "time_horizon": { "type": "string", "enum": ["Mid"] }
                         },
                         "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
-                        "additionalProperties": false
+                        "additionalProperties": False
                       }
                     },
                     "long_term": {
@@ -204,12 +204,12 @@ json_schema = {
                           "time_horizon": { "type": "string", "enum": ["Long"] }
                         },
                         "required": ["trigger", "entry", "stop", "target", "rr", "confidence", "execution_detail", "time_horizon"],
-                        "additionalProperties": false
+                        "additionalProperties": False
                       }
                     }
                   },
                   "required": ["short_term", "mid_term", "long_term"],
-                  "additionalProperties": false
+                  "additionalProperties": False
                 },
                 "section_3.1_trade_setup_fno_ideas": {
                     "type": "array",
