@@ -118,8 +118,29 @@ json_schema = {
                             "final_verdict": {
                                 "type": "object",
                                 "properties": {
-                                    "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell","Reduce","Increase"], "description": "If quite bad technically suggest a Sell else Hold.If looking good and consolidating Increase"},
-                                    "if_not_holding": {"type": "string", "enum": ["Wait", "Buy","Avoid"]}
+                                    # "if_holding": {"type": "string", "enum": ["Hold", "Buy", "Sell","Reduce","Increase"], "description": "If quite bad technically suggest a Sell else Hold.If looking good and consolidating Increase"},
+                                    # "if_not_holding": {"type": "string", "enum": ["Wait", "Buy","Avoid"]}
+                                    
+                                  "if_holding": {
+                                    "type": "string",
+                                    "enum": ["Hold", "Buy", "Sell", "Reduce", "Increase"],
+                                    "description": "Action for an investor who ALREADY owns the stock.\n\
+                                • Hold     – Maintain position when technicals are neutral or trendless.\n\
+                                • Buy      – Add aggressively because a strong new breakout or catalyst is in play.\n\
+                                • Sell     – Exit completely when technical picture is clearly bearish or a major breakdown occurs.\n\
+                                • Reduce   – Trim part of the position to lock gains or control risk when momentum stalls or resistance looms.\n\
+                                • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume."
+                                  },
+                                
+                                  "if_not_holding": {
+                                    "type": "string",
+                                    "enum": ["Wait", "Buy", "Avoid"],
+                                    "description": "Action for an investor who DOES NOT own the stock.\n\
+                                • Wait  – Stay on the sidelines until a cleaner technical entry appears.\n\
+                                • Buy   – Initiate a position now because the setup is strong and risk‑reward is attractive.\n\
+                                • Avoid – Skip the stock altogether due to weak technicals, excessive volatility, or poor liquidity."
+                                  }
+
                                 },
                                 "required": ["if_holding", "if_not_holding"],
                                 "additionalProperties": False
