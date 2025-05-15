@@ -595,6 +595,13 @@ if submit:
         output_text=response.output_text.strip().replace("```json", "").replace("```", "").strip()
         data = json.loads(output_text)
 
+        collection_ta=db['technical_summary']
+        collection_ta.replace_one(
+            {"stock": ticker},  # match on stock
+            data,
+            upsert=True             # insert if doesn't exist
+        )
+
         data["section_11_fact_metrics"] = {
             "current_price": {"value": current_price},
             "week_52_high": {"value": week_52_high},
