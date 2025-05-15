@@ -24,6 +24,8 @@ CREDENTIALS = {
 
 }
 
+
+
 def login_block():
     """Returns True when user is authenticated."""
     if "authenticated" not in st.session_state:
@@ -52,6 +54,8 @@ def login_block():
 if not login_block():
     st.stop()
 
+yesterday = date.today() - timedelta(days=1)
+
 json_schema = {
     "format": {
         "type": "json_schema",
@@ -61,7 +65,7 @@ json_schema = {
             "properties": {
                 "date_ran": {
                     "type": "string",
-                    "description": "Date when the analysis was run. Format: YYYY-MM-DD (defaults to current_date - 1)"
+                    "description": "Date when the analysis was run"
                 },
                 "stock": {"type": "string"},
                 "section_1_current_outlook": {
@@ -569,6 +573,8 @@ if submit:
                      Market Cap Type: {mcaptype}
                     " Index: {index_ema['Index']}
                     "EMA-20: {index_ema['EMA_20']}, EMA-50: {index_ema['EMA_50']}, EMA-100: {index_ema['EMA_100']}
+
+                    date_ran={yesterday}
           
                  Ensure the output is highly structured, uses markdown formatting
                 Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
