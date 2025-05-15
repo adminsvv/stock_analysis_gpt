@@ -59,6 +59,10 @@ json_schema = {
         "schema": {
             "type": "object",
             "properties": {
+                "date_ran": {
+                    "type": "string",
+                    "description": "Date when the analysis was run. Format: YYYY-MM-DD (defaults to current_date - 1)"
+                },
                 "stock": {"type": "string"},
                 "section_1_current_outlook": {
                     "type": "object",
@@ -401,49 +405,10 @@ json_schema = {
                     "items": {"type": "string"}
                 },
                 
-                  # "section_11_scenario_map": {
-                  #   "type": "array",
-                  #   "description": "Defines conditional trading scenarios in a structured format for alerting and automation.",
-                  #   "items": {
-                  #     "type": "object",
-                  #     "properties": {
-                  #       "direction": {
-                  #         "type": "string",
-                  #         "enum": ["upside", "downside"]
-                  #       },
-                  #       "price_trigger": {
-                  #         "type": "number",
-                  #         "description": "The price level that must be breached to activate the scenario."
-                  #       },
-                  #       "price_condition": {
-                  #         "type": "string",
-                  #         "enum": [">", "<", ">=", "<="],
-                  #         "description": "Condition for price comparison against price_trigger."
-                  #       },
-                  #       "delivery_pct_threshold": {
-                  #         "type": "number"
-                  #       },
-                  #       "target_zone": {
-                  #         "type": "string"
-                  #       },
-                  #       "action": {
-                  #         "type": "string"
-                  #       }
-                  #     },
-                  #     "required": [
-                  #       "direction",
-                  #       "price_trigger",
-                  #       "price_condition",
-                  #       "delivery_pct_threshold",
-                  #       "target_zone",
-                  #       "action"
-                  #     ],
-                  #     "additionalProperties": False
-                  #   }
-                  # }
+                 
                 
             },
-            "required": ["stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion"],
+            "required": ["date_ran","stock", "section_1_current_outlook", "section_2_trend_horizon_buckets", "section_3_trade_setup_ideas","section_3.1_trade_setup_fno_ideas", "section_4_support_resistance", "section_5_price_volume_action","section_6_index_correlation","section_7_extended_moves","section_8_distance_from_breakout", "section_9_detailed_tech_rating","section_10_overall_conclusion"],
             "additionalProperties": False
         },
         "strict":True
