@@ -134,7 +134,7 @@ json_schema = {
                                     "enum": ["Hold", "Buy", "Sell", "Reduce", "Increase"],
                                     "description": "Action for an investor who ALREADY owns the stock.\n\
                                 • Hold     – Maintain position when technicals are neutral or trendless.\n\
-                                • Buy      – Add aggressively because a strong new breakout or catalyst is in play.The stock is in early stage 2\n\
+                                • Buy      – Add aggressively because a strong new breakout or catalyst is in play.The stock is in early stage 2. For all short, medium,long term\n\
                                 • Sell     – Exit completely when technical picture is clearly bearish or a major breakdown occurs.\n\
                                 • Reduce   – Trim part of the position to lock gains or control risk when momentum stalls or resistance looms or is extremely extended.\n\
                                 • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume.\n\
@@ -146,7 +146,7 @@ json_schema = {
                                     "enum": ["Wait", "Buy", "Avoid"],
                                     "description": "Action for an investor who DOES NOT own the stock.\n\
                                 • Wait  – Stay on the sidelines until a cleaner technical entry appears.\n\
-                                • Buy   – Initiate a position now because the setup is strong and risk‑reward is attractive. Stock is in early stage 2\n\
+                                • Buy   – Initiate a position now because the setup is strong and risk‑reward is attractive. Stock is in early stage 2. If good technicals buy for medium and long\n\
                                 • Avoid – Skip the stock altogether due to weak technicals, excessive volatility, or poor liquidity.\n\
                                  This should be decided based on short medium long horizon. Basis on your final verdict decide Hold, buy,sell,reduce,increase"
                                   }
@@ -581,7 +581,8 @@ if submit:
                  Ensure the output is highly structured, uses markdown formatting
                 Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
 
-                Decide on `if_holding` and `if_not_holding` based on technical structure. Apply this with variations for both short term ,mid term, long term
+                Decide on `if_holding` and `if_not_holding` based on technical structure. Apply this with variations for both short term ,mid term, long term horizon trend.
+                Dont act conservative and always give Hold and wait.
 
                 • Hold     – Maintain position when technicals are neutral or trendless.\n\
                 • Buy      – Add aggressively because a strong new breakout or catalyst is in play.The stock is in early stage 2\n\
