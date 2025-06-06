@@ -579,14 +579,15 @@ if submit:
                  Ensure the output is highly structured, uses markdown formatting
                 Avoid speculation; use only what can be inferred from technical indicators and price-volume structure.
 
-                Decide on `if_holding` and `if_not_holding` based on technical structure.
+                Decide on `if_holding` and `if_not_holding` based on technical structure. Apply this with variations for both short term ,mid term, long term
 
                 • Hold     – Maintain position when technicals are neutral or trendless.\n\
                 • Buy      – Add aggressively because a strong new breakout or catalyst is in play.The stock is in early stage 2\n\
                 • Sell     – Exit completely when technical picture is clearly bearish or a major breakdown occurs.\n\
                 • Reduce   – Trim part of the position to lock gains or control risk when momentum stalls or resistance looms or is extremely extended.\n\
                 • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume."
-                
+
+              
                 """
             },
         ],
