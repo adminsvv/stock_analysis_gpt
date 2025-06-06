@@ -137,7 +137,7 @@ json_schema = {
                                 • Buy      – Add aggressively because a strong new breakout or catalyst is in play.The stock is in early stage 2\n\
                                 • Sell     – Exit completely when technical picture is clearly bearish or a major breakdown occurs.\n\
                                 • Reduce   – Trim part of the position to lock gains or control risk when momentum stalls or resistance looms or is extremely extended.\n\
-                                • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume.
+                                • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume.\n\
                                 This should be decided based on short medium long horizon. Basis on your final verdict decide Hold, buy,sell,reduce,increase"
                                   },
                                 
@@ -147,7 +147,7 @@ json_schema = {
                                     "description": "Action for an investor who DOES NOT own the stock.\n\
                                 • Wait  – Stay on the sidelines until a cleaner technical entry appears.\n\
                                 • Buy   – Initiate a position now because the setup is strong and risk‑reward is attractive. Stock is in early stage 2\n\
-                                • Avoid – Skip the stock altogether due to weak technicals, excessive volatility, or poor liquidity.
+                                • Avoid – Skip the stock altogether due to weak technicals, excessive volatility, or poor liquidity.\n\
                                  This should be decided based on short medium long horizon. Basis on your final verdict decide Hold, buy,sell,reduce,increase"
                                   }
 
