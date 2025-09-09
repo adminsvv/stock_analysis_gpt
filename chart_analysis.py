@@ -74,7 +74,7 @@ json_schema = {
                         "stage": {
                             "type": "object",
                             "properties": {
-                                "value": {"type": "integer","description":"Stage 1 – Base Building (Accumulation): Stock trades sideways in a range after a decline, volume is light, institutions quietly accumulate.Stage 2 – Advancing (Uptrend): Breakout from Stage 1 base, stock trends higher with strong price and volume action. Best stage for buying.Stage 3 – Topping (Distribution): Stock stops making progress, shows choppy sideways action near highs, distribution by institutions begins.Stage 4 – Declining (Downtrend): Breakdown from Stage 3, prolonged downtrend with lower highs/lows, heavy selling pressure.},
+                                "value": {"type": "integer","description":"Stage 1 – Base Building (Accumulation): Stock trades sideways in a range after a decline, volume is light, institutions quietly accumulate.Stage 2 – Advancing (Uptrend): Breakout from Stage 1 base, stock trends higher with strong price and volume action. Best stage for buying.Stage 3 – Topping (Distribution): Stock stops making progress, shows choppy sideways action near highs, distribution by institutions begins.Stage 4 – Declining (Downtrend): Breakdown from Stage 3, prolonged downtrend with lower highs/lows, heavy selling pressure."},
                                 "comment": {"type": "string"}
                             },
                             "required": ["value", "comment"],
