@@ -565,7 +565,11 @@ if submit:
         response = client.responses.create(
         model="gpt-4.1",
         input=[
-            {"role": "system", "content": "You are a technical chart analyst"},
+            {"role": "system", "content": f"""You are a technical chart analyst. You will be provided ohlcv data of a stock of 100 days and as a pro chartist you need to identify stages, chart patterns and trade setup.
+                                    These are the stage rules
+                                    Stage 1 – Base Building (Accumulation): Stock trades sideways in a range after a decline, volume is light, institutions quietly accumulate.Stage 2 – Advancing (Uptrend): Breakout from Stage 1 base, stock trends higher with strong price and volume action. Best stage for buying.Stage 3 – Topping (Distribution): Stock stops making progress, shows choppy sideways action near highs, distribution by institutions begins.Stage 4 – Declining (Downtrend): Breakdown from Stage 3, prolonged downtrend with lower highs/lows, heavy selling pressure.
+                                     Do not reinvent data. Solely focus on data provided. Make sure to look how much correction has been made from top to look at high
+             """},
             {
                 "role": "user",
                 "content": f"""you are a techincal analyst based on the ohlcv data and delivery volume of a stock {text_data} provide the answer
