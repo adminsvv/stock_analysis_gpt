@@ -74,7 +74,7 @@ json_schema = {
                         "stage": {
                             "type": "object",
                             "properties": {
-                                "value": {"type": "integer"},
+                                "value": {"type": "integer","description":"Stage 1 – Base Building (Accumulation): Stock trades sideways in a range after a decline, volume is light, institutions quietly accumulate.Stage 2 – Advancing (Uptrend): Breakout from Stage 1 base, stock trends higher with strong price and volume action. Best stage for buying.Stage 3 – Topping (Distribution): Stock stops making progress, shows choppy sideways action near highs, distribution by institutions begins.Stage 4 – Declining (Downtrend): Breakdown from Stage 3, prolonged downtrend with lower highs/lows, heavy selling pressure.},
                                 "comment": {"type": "string"}
                             },
                             "required": ["value", "comment"],
@@ -360,7 +360,7 @@ json_schema = {
                   "properties": {
                     "distance_from_breakout_perc": {
                       "type": "number",
-                      "description": "Percentage gain from the last confirmed breakout level. Positive if above breakout."
+                      "description": "Percentage gain from the last confirmed breakout level. Positive if above breakout.It should be a major breakout"
                     },
                     "breakout_level": {
                       "type": "number",
@@ -570,6 +570,7 @@ if submit:
                 "role": "user",
                 "content": f"""you are a techincal analyst based on the ohlcv data and delivery volume of a stock {text_data} provide the answer
                 Delivery Volume: No of stocks that were taken as delivery and not intraday
+                
                
                 You are also given teh EMA for the Index assocaited with the stock
                      Market Cap Type: {mcaptype}
@@ -590,6 +591,7 @@ if submit:
                 • Reduce   – Trim part of the position to lock gains or control risk when momentum stalls or resistance looms or is extremely extended.\n\
                 • Increase – Add modestly (scale‑in) when the stock is basing constructively or breaking out on rising volume."
 
+                When making your analysis dont just go by numbers but by % change.
               
                 """
             },
