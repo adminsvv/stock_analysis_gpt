@@ -85,7 +85,26 @@ json_schema = {
                         "chart_pattern": {
                             "type": "object",
                             "properties": {
-                                "value": {"type": "string", "description": "Exact pattern name (e.g., cup with handle,flag,penant or no pattern)."},
+                                "value": {"type": "string", "description": f"""Exact pattern name:
+                                                                                Step Chart – Shows price moving in distinct horizontal and vertical steps, reflecting consolidation phases followed by sharp directional moves.
+
+                                                                                Flag – A short consolidation channel after a strong trend, signaling continuation once the flag breaks in the trend’s direction.
+                                                                                
+                                                                                Pennant – A small symmetrical triangle following a sharp price move, indicating trend continuation after a brief pause.
+                                                                                
+                                                                                1-2-3 Pattern – A three-point reversal or continuation structure that marks a trend change when the third point confirms breakout.
+                                                                                
+                                                                                Cup and Handle – A rounded “U” shape followed by a small dip, suggesting accumulation before a bullish breakout.
+                                                                                
+                                                                                Triangle – Converging trendlines showing price compression, typically resolving in a breakout aligned with the prevailing trend.
+                                                                                
+                                                                                Low Cheat – An early breakout entry setup within a base, entered near support before full pattern confirmation.
+                                                                                
+                                                                                VCP (Volatility Contraction Pattern) – Successive tighter price contractions signaling institutional accumulation and a potential breakout.
+                                                                                
+                                                                                Inverted Head and Shoulders – A three-trough reversal formation where the middle trough is deepest, signaling a bullish reversal.
+                                                                                
+                                                                                Engulfing / Reversal – A candlestick pattern where a large candle fully engulfs the previous one, indicating a possible trend reversal."""},
                                 "comment": {"type": "string"}
                             },
                             "required": ["value", "comment"],
@@ -165,7 +184,7 @@ json_schema = {
                   "properties": {
                     "short_term": {
                       "type": "array",
-                      "description": "Short-term trades (1- 10 days). Can be left blank if no good setup.",
+                      "description": "Short-term trades (1- 10 days). Can be left blank if no good setup. Trade entry can be on a breakout as well as pull back. Dont just restrict to pull back",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -272,7 +291,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "number"},
+                                    "level": {"type": "string","description":"A close range of number like 100-101"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
@@ -284,7 +303,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "number"},
+                                    "level": {"type": "number","description":"A close range of number like 100-101"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
@@ -360,7 +379,7 @@ json_schema = {
                   "properties": {
                     "distance_from_breakout_perc": {
                       "type": "number",
-                      "description": "Percentage gain from the last confirmed breakout level. Positive if above breakout.It should be a major breakout"
+                      "description": "Percentage gain from the last confirmed breakout level. Positive if above breakout.It should be a major breakout. Make sure calculation is correct"
                     },
                     "breakout_level": {
                       "type": "number",
@@ -568,7 +587,9 @@ if submit:
             {"role": "system", "content": f"""You are a technical chart analyst. You will be provided ohlcv data of a stock of 100 days and as a pro chartist you need to identify stages, chart patterns and trade setup.
                                     These are the stage rules
                                     Stage 1 – Base Building (Accumulation): Stock trades sideways in a range after a decline, volume is light, institutions quietly accumulate.Stage 2 – Advancing (Uptrend): Breakout from Stage 1 base, stock trends higher with strong price and volume action. Best stage for buying.Stage 3 – Topping (Distribution): Stock stops making progress, shows choppy sideways action near highs, distribution by institutions begins.Stage 4 – Declining (Downtrend): Breakdown from Stage 3, prolonged downtrend with lower highs/lows, heavy selling pressure.
-                                     Do not reinvent data. Solely focus on data provided. Make sure to look how much correction has been made from top to look at stages and rating
+                                     Do not reinvent data. Solely focus on data provided. Make sure to look how much correction has been made from top to look at stages and rating.
+
+                                     For trade setups the trade can be taken even on a clean breakout. Not necessary all entries to be taken on pull back.
              """},
             {
                 "role": "user",
