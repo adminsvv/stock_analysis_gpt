@@ -201,7 +201,7 @@ json_schema = {
                           "confidence": { "type": "string" },
                           "execution_detail": {
                             "type": "string",
-                            "description": "Detailed execution plan"
+                            "description": "Detailed execution plan.Do not give any short trades that is first sell then buy."
                           },
                           "time_horizon": { "type": "string", "enum": ["Short"] }
                         },
@@ -211,7 +211,7 @@ json_schema = {
                     },
                     "mid_term": {
                       "type": "array",
-                      "description": "Mid-term trades (typically 1- 3 months).",
+                      "description": "Mid-term trades (typically 1- 3 months).Can be left blank if no good setup. Trade entry can be on a breakout as well as pull back. Dont just restrict to pull back",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -226,7 +226,7 @@ json_schema = {
                           "confidence": { "type": "string" },
                           "execution_detail": {
                             "type": "string",
-                            "description": "Detailed execution plan"
+                            "description": "Detailed execution plan.Do not give any short trades that is first sell then buy."
                           },
                           "time_horizon": { "type": "string", "enum": ["Mid"] }
                         },
@@ -236,7 +236,7 @@ json_schema = {
                     },
                     "long_term": {
                       "type": "array",
-                      "description": "Long-term trades (typically months or more).",
+                      "description": "Long-term trades (typically months or more).Can be left blank if no good setup. Trade entry can be on a breakout as well as pull back. Dont just restrict to pull back",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -251,7 +251,7 @@ json_schema = {
                           "confidence": { "type": "string" },
                           "execution_detail": {
                             "type": "string",
-                            "description": "Detailed execution plan"
+                            "description": "Detailed execution plan.Do not give any short trades that is first sell then buy."
                           },
                           "time_horizon": { "type": "string", "enum": ["Long"] }
                         },
@@ -293,7 +293,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "string","description":"A close range of number like 100-101"},
+                                    "level": {"type": "string","description":"A close range of number for eg: 100-101,500-505"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
@@ -305,7 +305,7 @@ json_schema = {
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "level": {"type": "number","description":"A close range of number like 100-101"},
+                                    "level": {"type": "string","description":"A close range of number for eg: 100-101,500-505"},
                                     "note": {"type": "string"}
                                 },
                                 "required": ["level", "note"],
