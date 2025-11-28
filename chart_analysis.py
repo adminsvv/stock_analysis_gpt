@@ -477,6 +477,7 @@ if submit:
             continue
     
         df = pd.DataFrame(resp.json()["data"]).sort_values("Date")
+        st.write("data for index",df)
         #df.columns = [col.upper() for col in df.columns]
     
         index_ema_map[mcaptype] = {
@@ -493,7 +494,7 @@ if submit:
 
     if doc:
         co_code = doc.get("co_code")
-        print(f"co_code for {ticker}: {co_code}")
+        st.write(f"co_code for {ticker}: {co_code}")
         url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{co_code}/d/110"
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
