@@ -526,30 +526,30 @@ if submit:
     df =pd.DataFrame(response.json()["data"]).sort_values("Date")
     st.write(df.head())
     st.write(df.tail())
-    ######### code for weekly
-    df["Date"] = pd.to_datetime(df["Date"])
+    ######### code for weekly ##########
+    # df["Date"] = pd.to_datetime(df["Date"])
 
-# set index to Date for resampling
-    df = df.set_index("Date")
+    # # set index to Date for resampling
+    # df = df.set_index("Date")
     
-    # weekly resample with week starting Monday
-    # label='left' -> label period with the start date (Mon)
-    # closed='left' -> include dates from Mon (inclusive) to next Mon (exclusive)
-    df_weekly = (
-        df.resample("W-MON", label="left", closed="left")
-          .agg({
-              "OPEN": "first",      # first open of the week
-              "HIGH": "max",        # highest high
-              "LOW": "min",         # lowest low
-              "Close": "last",      # last close of the week
-              "Volume": "sum",      # total volume
-              "Tradedvalue": "sum"  # total traded value
-          })
-          .dropna(subset=["OPEN"])       # drop incomplete first week if needed
-          .reset_index()                 # bring Date back as a column
-    )
+    # # weekly resample with week starting Monday
+    # # label='left' -> label period with the start date (Mon)
+    # # closed='left' -> include dates from Mon (inclusive) to next Mon (exclusive)
+    # df_weekly = (
+    #     df.resample("W-MON", label="left", closed="left")
+    #       .agg({
+    #           "OPEN": "first",      # first open of the week
+    #           "HIGH": "max",        # highest high
+    #           "LOW": "min",         # lowest low
+    #           "Close": "last",      # last close of the week
+    #           "Volume": "sum",      # total volume
+    #           "Tradedvalue": "sum"  # total traded value
+    #       })
+    #       .dropna(subset=["OPEN"])       # drop incomplete first week if needed
+    #       .reset_index()                 # bring Date back as a column
+    # )
     
-    st.write("weekly data",df_weekly.head())
+    # st.write("weekly data",df_weekly.head())
     
 
     #df = df.sort_values('Date')
