@@ -455,10 +455,11 @@ with st.form("stock_form"):
 )
     
     submit = st.form_submit_button("Fetch Data")
+    
 
 if submit:
     ticker = ticker.strip().upper()
-
+    st.write("days",lookback_days)
 
     start_time=datetime.now()
     client_mongo = MongoClient("mongodb+srv://prachi:Akash5555@stockgpt.fryqpbi.mongodb.net/")  # update if needed
@@ -504,6 +505,7 @@ if submit:
         co_code = doc.get("co_code")
         st.write(f"co_code for {ticker}: {co_code}")
         url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/{co_code}/d/{lookback_days}"
+        print(url)
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
         index_ema = index_ema_map.get(mcaptype)
