@@ -494,7 +494,7 @@ if submit:
     if doc:
         co_code = doc.get("co_code")
         print(f"co_code for {ticker}: {co_code}")
-        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{co_code}/d/365"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{co_code}/d/110"
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
         index_ema = index_ema_map.get(mcaptype)
@@ -512,9 +512,10 @@ if submit:
         print("No company found with given NSE symbol.")
         
         
-    df = pd.DataFrame(data["data"])
+    df =pd.DataFrame(response.json()["data"]).sort_values("Date")
+    st.write(df.head())
 
-    df = df.sort_values('Date')
+    #df = df.sort_values('Date')
 
     # Compute DMA values
     dma_9 = round(df['Close'].rolling(window=9).mean().iloc[-1], 2)
