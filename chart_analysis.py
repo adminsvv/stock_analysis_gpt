@@ -1,3 +1,5 @@
+#url = f"https://admin.stocksemoji.com/flavours//BSENSEPriceHistorical/{index_code}/d/365/"
+
 import base64
 from openai import OpenAI
 import yfinance as yf
@@ -467,7 +469,7 @@ if submit:
         doc_index = collection.find_one({"nsesymbol": index_symbol.upper()})
         if doc_index:
             index_code = doc_index.get("co_code")
-        url = f"https://admin.stocksemoji.com/api/cmot/BSENSEPriceHistorical/nse/{index_code}/d/365"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{index_code}/d/365"
         resp = requests.get(url)
     
         if resp.status_code != 200:
@@ -492,7 +494,7 @@ if submit:
     if doc:
         co_code = doc.get("co_code")
         print(f"co_code for {ticker}: {co_code}")
-        url = f"https://admin.stocksemoji.com/api/cmot/BSENSEPriceHistorical/nse/{co_code}/d/365"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{co_code}/d/365"
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
         index_ema = index_ema_map.get(mcaptype)
@@ -502,10 +504,10 @@ if submit:
             #print("Price Data:", data)
         url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/NSE/{co_code}/H/d/110"
         response_dv = requests.get(url_dv)
-        if response_dv.status_code == 200:
-            data_dv = response_dv.json()
-        else:
-            print("API Error:", response.status_code, response.text)
+        # if response_dv.status_code == 200:
+        #     data_dv = response_dv.json()
+        # else:
+        #     print("API Error:", response.status_code, response.text)
     else:
         print("No company found with given NSE symbol.")
         
@@ -527,10 +529,10 @@ if submit:
     today = df['Date'].max() 
 
     df = df[df['Date'] >= today - timedelta(days=150)]
-    df_dv=pd.DataFrame(data_dv["data"])
-    df_dv['tr_date'] = pd.to_datetime(df_dv['tr_date']).dt.strftime('%Y-%m-%d')
-    df_dv['tr_date']=df_dv['tr_date'].astype(str)
-    df_dv.rename(columns={'tr_date': 'Date'}, inplace=True)
+    # df_dv=pd.DataFrame(data_dv["data"])
+    # df_dv['tr_date'] = pd.to_datetime(df_dv['tr_date']).dt.strftime('%Y-%m-%d')
+    # df_dv['tr_date']=df_dv['tr_date'].astype(str)
+    # df_dv.rename(columns={'tr_date': 'Date'}, inplace=True)
     df=df[['NSE_SYMBOL','Date','OPEN','HIGH','LOW','Close','Volume']]
     # data
     print(df.head())
@@ -574,7 +576,7 @@ if submit:
     
     st.plotly_chart(fig, use_container_width=True)
     df['Date'] = df['Date'].astype(str)
-    df=df.merge(df_dv[['Date','DevlieryVolume']],how='left',on='Date')
+    #df=df.merge(df_dv[['Date','DevlieryVolume']],how='left',on='Date')
     
     # st.dataframe(df)
     # text_data = df.to_string(index=False)
@@ -594,7 +596,7 @@ if submit:
             {
                 "role": "user",
                 "content": f"""you are a techincal analyst based on the ohlcv data and delivery volume of a stock {text_data} provide the answer
-                Delivery Volume: No of stocks that were taken as delivery and not intraday
+             
                 
                
                 You are also given teh EMA for the Index assocaited with the stock
