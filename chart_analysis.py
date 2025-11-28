@@ -477,7 +477,7 @@ if submit:
             continue
     
         df = pd.DataFrame(resp.json()["data"]).sort_values("Date")
-        st.write("data for index",df)
+        #st.write("data for index",df)
         #df.columns = [col.upper() for col in df.columns]
     
         index_ema_map[mcaptype] = {
@@ -515,6 +515,8 @@ if submit:
         
     df =pd.DataFrame(response.json()["data"]).sort_values("Date")
     st.write(df.head())
+    st.write(df.tail())
+    
 
     #df = df.sort_values('Date')
 
