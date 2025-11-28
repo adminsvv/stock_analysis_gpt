@@ -446,6 +446,14 @@ json_schema = {
 
 with st.form("stock_form"):
     ticker = st.text_input("Enter NSE Symbol (e.g., TCS, INFY)", "MCX")
+    lookback-days = st.number_input(
+    "Enter number of days (100, 200, 365)",
+    min_value=1,
+    max_value=3650,
+    value=100,
+    step=1
+)
+    
     submit = st.form_submit_button("Fetch Data")
 
 if submit:
@@ -495,7 +503,7 @@ if submit:
     if doc:
         co_code = doc.get("co_code")
         st.write(f"co_code for {ticker}: {co_code}")
-        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/{co_code}/d/110"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/{co_code}/d/{lookback-days}"
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
         index_ema = index_ema_map.get(mcaptype)
@@ -503,8 +511,8 @@ if submit:
         if response.status_code == 200:
             data = response.json()
             #print("Price Data:", data)
-        url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/{co_code}/H/d/110"
-        response_dv = requests.get(url_dv)
+        #url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/{co_code}/H/d/{lookback-days}"
+        #response_dv = requests.get(url_dv)
         # if response_dv.status_code == 200:
         #     data_dv = response_dv.json()
         # else:
