@@ -463,8 +463,8 @@ if submit:
 
     start_time=datetime.now()
     client_mongo = MongoClient("mongodb+srv://prachi:Akash5555@stockgpt.fryqpbi.mongodb.net/")  # update if needed
-    db = client_mongo["CAG_CHATBOT"]
-    collection = db["CompaniesDetails"]
+    db = client_mongo["OdinMasterData"]
+    collection = db["CompanyMaster"]
     index_map = {
     "Large Cap": "NIFTY",
     "Mid Cap": "NMIDCAP150",
