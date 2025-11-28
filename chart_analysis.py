@@ -469,7 +469,7 @@ if submit:
         doc_index = collection.find_one({"nsesymbol": index_symbol.upper()})
         if doc_index:
             index_code = doc_index.get("co_code")
-        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{index_code}/d/365"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/{index_code}/d/365"
         resp = requests.get(url)
     
         if resp.status_code != 200:
@@ -495,7 +495,7 @@ if submit:
     if doc:
         co_code = doc.get("co_code")
         st.write(f"co_code for {ticker}: {co_code}")
-        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/nse/{co_code}/d/110"
+        url = f"https://admin.stocksemoji.com/flavours/BSENSEPriceHistorical/{co_code}/d/110"
         response = requests.get(url)
         mcaptype = doc.get("mcaptype")  # Default to Large Cap
         index_ema = index_ema_map.get(mcaptype)
@@ -503,7 +503,7 @@ if submit:
         if response.status_code == 200:
             data = response.json()
             #print("Price Data:", data)
-        url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/NSE/{co_code}/H/d/110"
+        url_dv=f"https://admin.stocksemoji.com/api/cmot/DeliverableVolume/{co_code}/H/d/110"
         response_dv = requests.get(url_dv)
         # if response_dv.status_code == 200:
         #     data_dv = response_dv.json()
